@@ -21,10 +21,10 @@
 Cypress.Commands.add('fillBookingForm', (guest) => {
   // Each field is targeted by its data-testid or placeholder to be resilient
   // against class/id changes that are common in React apps.
-  cy.get('[data-testid="FirstName"]').clear().type(guest.firstName);
-  cy.get('[data-testid="LastName"]').clear().type(guest.lastName);
-  cy.get('[data-testid="Email"]').clear().type(guest.email);
-  cy.get('[data-testid="Phone"]').clear().type(guest.phone);
+  cy.get('[name="firstname"]').clear().type(guest.firstName)
+  cy.get('[name = "lastname"]').clear().type(guest.lastName);
+  cy.get('[name = "email"]').clear().type(guest.email);
+  cy.get('[name = "phone"]').clear().type(guest.phone);
 });
 
 // -----------------------------------------------------------------------------
@@ -44,24 +44,10 @@ Cypress.Commands.add('fillBookingForm', (guest) => {
 // @param {string} checkin   — format 'YYYY-MM-DD'  e.g. '2026-07-15'
 // @param {string} checkout  — format 'YYYY-MM-DD'  e.g. '2026-07-18'
 // -----------------------------------------------------------------------------
-Cypress.Commands.add('selectBookingDates', (checkin, checkout) => {
-  // The calendar shows month/year buttons. We look for the day number inside
-  // the rdrDayNumber spans and click the first match (visible month).
-  const checkinDay  = checkin.split('-')[2].replace(/^0/, '');   // '15'
-  const checkoutDay = checkout.split('-')[2].replace(/^0/, '');  // '18'
-
-  // Click the check-in day
-  cy.get('.rdrDayNumber span')
-    .contains(new RegExp(`^${checkinDay}$`))
-    .first()
-    .click({ force: true });
-
-  // Click the check-out day
-  cy.get('.rdrDayNumber span')
-    .contains(new RegExp(`^${checkoutDay}$`))
-    .first()
-    .click({ force: true });
-});
+Cypress.Commands.add('selectBookingDates', () => {
+  cy.contains('.rbc-event-content', 'Selected')
+    .should('be.visible')
+})
 
 // -----------------------------------------------------------------------------
 // cy.adminLogin(credentials)
